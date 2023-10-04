@@ -19,7 +19,7 @@ const MySliderComponent: React.FC<any> = (props) => {
   
   const createOption = (label: string) => ({
     label,
-    value: label.toLowerCase().replace(/\W/g, ''),
+    value: label,
   });
 
   
@@ -88,6 +88,14 @@ const MySliderComponent: React.FC<any> = (props) => {
     }),
 };
 
+const isValidNewOption = (inputValue: string, selectValue: any, selectOptions: any) => {
+  const isOptionAlreadyExists = selectOptions.some(
+    (option: Option) => option.label === inputValue
+  );
+  console.log(isOptionAlreadyExists, inputValue, selectValue, selectOptions);
+  return !isOptionAlreadyExists;
+};
+
 const customTheme = (defaultTheme: any) => ({
   ...defaultTheme,
   colors: {
@@ -111,6 +119,7 @@ const customTheme = (defaultTheme: any) => ({
         theme={customTheme}
         options={options}
         defaultValue={defaultSelectedOptions}
+        isValidNewOption={isValidNewOption}
         
       />
         

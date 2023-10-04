@@ -12,14 +12,14 @@ if not _RELEASE:
         url="http://localhost:3001",
     )
 else:
-
     parent_dir = os.path.dirname(os.path.abspath(__file__))
     build_dir = os.path.join(parent_dir, "frontend/build")
     _component_func = components.declare_component("flexselect", path=build_dir)
 
 
-
-def flexselect(label, options: List[str], default_values: Optional[List[str]] = None, key=None, on_change=None, args=None, kwargs=None) -> List[str]:
+def flexselect(
+    label, options: List[str], default_values: Optional[List[str]] = None, key=None, on_change=None, args=None, kwargs=None
+) -> List[str]:
     """
     Creates a flexible select component that allows the user to select one or more options from a list of options.
 
@@ -31,24 +31,25 @@ def flexselect(label, options: List[str], default_values: Optional[List[str]] = 
     `on_change` (Optional[Callable]): An optional callback function to execute when the component value changes. **A key argument must be used to use the on_change** The callback must accept `key` as the first argument, and can accept more arguments. To accept these additional arguments, you need to pass `args`/`kwargs` to the component. Defaults to None.
     args (Optional[List]): An optional list of arguments to pass to the callback function. Defaults to None.
     kwargs (Optional[Dict]): An optional dictionary of keyword arguments to pass to the callback function. Defaults to None.
-    
+
     Returns:
     The value(s) selected by the user.
     """
     if on_change is not None:
         if key is None:
             st.error("You must pass a key if you want to use the on_change callback for the option menu")
-        else:    
-            
+        else:
             register_callback(key, on_change, key, args=args, kwargs=kwargs)
-            
+
     options = [str(option) for option in options]
     str_defaults = []
     default_values = default_values or []
     for value in default_values:
-        assert value in options, f"Every Multiselect default value must exist in options. Got default value {value} options are {options}"
+        assert (
+            value in options
+        ), f"Every Multiselect default value must exist in options. Got default value {value} options are {options}"
         str_defaults.append(str(value))
-    
+
     component_value = _component_func(label=label, options=options, default_values=default_values, key=key, default=0)
 
     # We could modify the value returned from the component if we wanted.
