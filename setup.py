@@ -7,7 +7,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name="streamlit-flexselect",
-    version="0.0.2",
+    version="0.0.3",
     author="Dvir Itzkovits",
     author_email="dvir.itzko@gmail.com",
     description="A flexible multiselect that lets the user add custom elements",
