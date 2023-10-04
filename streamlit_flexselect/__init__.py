@@ -46,7 +46,7 @@ def flexselect(
     default_values = default_values or []
     for value in default_values:
         assert (
-            value in options
+            str(value) in options
         ), f"Every Multiselect default value must exist in options. Got default value {value} options are {options}"
         str_defaults.append(str(value))
 
