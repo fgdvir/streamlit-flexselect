@@ -1,3 +1,4 @@
 **__pycache__**
 *.egg-info**
 streamlit_flexselect/frontend/node_modules
+dist**
