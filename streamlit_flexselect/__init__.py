@@ -1,57 +1,47 @@
 import os
+import streamlit as st
 from typing import List, Optional
 import streamlit.components.v1 as components
+from streamlit_flexselect.streamlit_callback import register_callback
 
-# Create a _RELEASE constant. We'll set this to False while we're developing
-# the component, and True when we're ready to package and distribute it.
-# (This is, of course, optional - there are innumerable ways to manage your
-# release process.)
-_RELEASE = False
-
-# Declare a Streamlit component. `declare_component` returns a function
-# that is used to create instances of the component. We're naming this
-# function "_component_func", with an underscore prefix, because we don't want
-# to expose it directly to users. Instead, we will create a custom wrapper
-# function, below, that will serve as our component's public API.
-
-# It's worth noting that this call to `declare_component` is the
-# *only thing* you need to do to create the binding between Streamlit and
-# your component frontend. Everything else we do in this file is simply a
-# best practice.
+_RELEASE = True
 
 if not _RELEASE:
     _component_func = components.declare_component(
-        # We give the component a simple, descriptive name ("my_component"
-        # does not fit this bill, so please choose something better for your
-        # own component :)
         "flexselect",
-        # Pass `url` here to tell Streamlit that the component will be served
-        # by the local dev server that you run via `npm run start`.
-        # (This is useful while your component is in development.)
-        url="http://10.155.43.188:3001",
+        url="http://localhost:3001",
     )
 else:
-    # When we're distributing a production version of the component, we'll
-    # replace the `url` param with `path`, and point it to the component's
-    # build directory:
+
     parent_dir = os.path.dirname(os.path.abspath(__file__))
     build_dir = os.path.join(parent_dir, "frontend/build")
     _component_func = components.declare_component("flexselect", path=build_dir)
 
 
-# Create a wrapper function for the component. This is an optional
-# best practice - we could simply expose the component function returned by
-# `declare_component` and call it done. The wrapper allows us to customize
-# our component's API: we can pre-process its input args, post-process its
-# output value, and add a docstring for users.
-def flexselect(name, options: List[str], default_values: Optional[List[str]] = None, key=None):
-    """"""
-    # Call through to our private component function. Arguments we pass here
-    # will be sent to the frontend, where they'll be available in an "args"
-    # dictionary.
-    #
-    # "default" is a special argument that specifies the initial return
-    # value of the component before the user has interacted with it.
+
+def flexselect(label, options: List[str], default_values: Optional[List[str]] = None, key=None, on_change=None, args=None, kwargs=None) -> List[str]:
+    """
+    Creates a flexible select component that allows the user to select one or more options from a list of options.
+
+    Parameters:
+    label (str): The label of the component.
+    options (List[str]): A list of options to choose from.
+    default_values (Optional[List[str]]): A list of default values to select. Defaults to None.
+    key (Optional[str]): An optional key to use for the component. Defaults to None.
+    `on_change` (Optional[Callable]): An optional callback function to execute when the component value changes. **A key argument must be used to use the on_change** The callback must accept `key` as the first argument, and can accept more arguments. To accept these additional arguments, you need to pass `args`/`kwargs` to the component. Defaults to None.
+    args (Optional[List]): An optional list of arguments to pass to the callback function. Defaults to None.
+    kwargs (Optional[Dict]): An optional dictionary of keyword arguments to pass to the callback function. Defaults to None.
+    
+    Returns:
+    The value(s) selected by the user.
+    """
+    if on_change is not None:
+        if key is None:
+            st.error("You must pass a key if you want to use the on_change callback for the option menu")
+        else:    
+            
+            register_callback(key, on_change, key, args=args, kwargs=kwargs)
+            
     options = [str(option) for option in options]
     str_defaults = []
     default_values = default_values or []
@@ -59,7 +49,7 @@ def flexselect(name, options: List[str], default_values: Optional[List[str]] = N
         assert value in options, f"Every Multiselect default value must exist in options. Got default value {value} options are {options}"
         str_defaults.append(str(value))
     
-    component_value = _component_func(name=name, options=options, default_values=default_values, key=key, default=0)
+    component_value = _component_func(label=label, options=options, default_values=default_values, key=key, default=0)
 
     # We could modify the value returned from the component if we wanted.
     # There's no need to do this in our simple example - but it's an option.

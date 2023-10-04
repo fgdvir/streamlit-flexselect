@@ -24,19 +24,25 @@ from streamlit_flexselect import flexselect
 
 ```python
 selected_values = flexselect(
-    name="Your Component Name",
+    label="Your Component Label",
     options=["Option 1", "Option 2", "Option 3"],
     default_values=["Option 1"]
 )
 ```
 
-- `name` (str): The name of the component.
+## Parameters
+
+- `label` (str): The label of the component.
 - `options` (List[str]): A list of options to choose from.
 - `default_values` (Optional[List[str]]): A list of default values to select. Defaults to None.
+- `key` (Optional[str]): An optional key to use for the component. Defaults to None.
+- `on_change` (Optional[Callable]): An optional callback function to execute when the component value changes. **A key argument must be used to use the on_change** The callback must accept `key` as the first argument, and can accept more arguments. To accept these additional arguments, you need to pass `args`/`kwargs` to the component. Defaults to None.
+- `args` (Optional[List]): An optional list of arguments to pass to the callback function. Defaults to None.
+- `kwargs` (Optional[Dict]): An optional dictionary of keyword arguments to pass to the callback function. Defaults to None.
 
-The function returns the values selected by the user.
+## Examples
 
-## Example
+### Simple Example
 
 Here's a simple example of how to use `flexselect` in a Streamlit app:
 
@@ -45,24 +51,47 @@ import streamlit as st
 from streamlit_flexselect import flexselect
 
 def main():
-    st.title("Streamlit FlexSelect Example")
+    st.title("Streamlit FlexSelect Simple Example")
 
     selected_values = flexselect(
-        name="Select your favorite fruits",
+        label="Select your favorite fruits",
         options=["Apple", "Orange", "Banana", "Grapes"],
         default_values=["Apple"]
     )
 
-    st.write(f"You selected: ", selected_values)
+    st.write(f"You selected: {', '.join(selected_values)}")
 
 if __name__ == "__main__":
     main()
 ```
 
-Run your Streamlit app:
+### Example with on_change Callback
 
-```bash
-streamlit run app.py
+Here's an example that uses the `on_change` callback to write the selected elements using `st.session_state[key]`, and the arguments and keyword arguments:
+
+```python
+import streamlit as st
+from streamlit_flexselect import flexselect
+
+def on_change_callback(key, *args, **kwargs):
+    selected_elements = st.session_state[key]
+    st.write(f"Selected elements:", selected_elements)
+    st.write(f"Args: {args}")
+    st.write(f"Kwargs: {kwargs}")
+
+def main():
+    st.title("Streamlit FlexSelect Callback Example")
+
+    selected_values = flexselect(
+        label="Select your favorite fruits",
+        options=["Apple", "Orange", "Banana", "Grapes"],
+        default_values=["Apple"],
+        on_change=on_change_callback,
+        key='flexselect'
+    )
+
+if __name__ == "__main__":
+    main()
 ```
 
 ## Contributing

@@ -13,14 +13,16 @@ const MySliderComponent: React.FC<any> = (props) => {
   });
 
   const { theme } = props;
+  const { label } = props.args;
+  const rawOptions = props.args.options || [];
+  const rawDefaultValues = props.args.default_values || [];
   
   const createOption = (label: string) => ({
     label,
     value: label.toLowerCase().replace(/\W/g, ''),
   });
 
-  const rawOptions = props.args.options || [];
-  const rawDefaultValues = props.args.default_values || [];
+  
 
 
     // Convert these values to the format expected by CreatableSelect
@@ -90,39 +92,29 @@ const customTheme = (defaultTheme: any) => ({
   ...defaultTheme,
   colors: {
       ...defaultTheme.colors,
-      primary25: theme.primaryColor ,  // Change as needed
+      primary25: theme.primaryColor ,  
       primary: isDarkTheme ? '#fff' : 'black',
       neutral0: isDarkTheme ? '#333' : '#fff',  // Background color
       neutral80: isDarkTheme ? '#fff' : '#333',  // Text color
-      // Add more color customizations if needed
   },
 });
 
   return (
-    // <ThemeProvider theme={muiTheme}>
-    // <div style={{ paddingLeft: "20px", paddingRight: paddingRightByLength, paddingTop: "10px"}}>
-      
-      // <div style={{ display: "flex", alignItems: "center" }}>
+    
       <div ref={rootRef}>
+        {label && <h5 style={{ fontSize: '13px' ,fontFamily: 'Arial'}}>{label}</h5>}
         <CreatableSelect
         isMulti
         isClearable
         onChange={handleSelectChange}
         styles={customStyles}
         theme={customTheme}
-        // onInputChange={handleSelectChange}
-        // onCreateOption={handleCreate}
-        // onMenuOpen={handleMenuOpen}
-        // onMenuClose={handleMenuClose}
         options={options}
         defaultValue={defaultSelectedOptions}
         
       />
         
       </div>
-      // </div>
-    // </div>
-    // </ThemeProvider>
   );
 };
 
