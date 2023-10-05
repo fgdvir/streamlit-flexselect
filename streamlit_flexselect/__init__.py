@@ -50,7 +50,7 @@ def flexselect(
         ), f"Every Multiselect default value must exist in options. Got default value {value} options are {options}"
         str_defaults.append(str(value))
 
-    component_value = _component_func(label=label, options=options, default_values=default_values, key=key, default=0)
+    component_value = _component_func(label=label, options=options, default_values=default_values, key=key, default=default_values)
 
     # We could modify the value returned from the component if we wanted.
     # There's no need to do this in our simple example - but it's an option.
